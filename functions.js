@@ -69,7 +69,7 @@ var quickReturn4 = (a, b) => a + b;
 // AKA: Immediately Invoked Function Expression
 // It is a way to setup the environment properly without "dirtying"
 // up the global namespace with another function.
-// It hides and protects your variables, actions from being tinkered with.
+// It hides and protects your variables, and/or actions, from being tinkered with.
 
 // Basically functions hiding within an expression that don't need to be named.
 // But they must exist within () or be operated initiated (versions D and E).
@@ -104,7 +104,6 @@ var quickReturn4 = (a, b) => a + b;
 
 
 // ----------- Declared Function: Functional Object Contructor ; 
-// Invoking a Function with a Function Constructor
 function Vehicle(name, maker) {     // function declaration with two parameters ready for arguments
     this.name = name;
     this.maker = maker;
@@ -125,6 +124,7 @@ var myObject = {
         return this.firstName + " " + this.lastName;
     }
 }
+
 myObject.fullName();         // Will return "John Doe"
 
 // ---------------- More bells and whistles ....
@@ -142,15 +142,19 @@ function Aircraft(name = ""
     this.manufacturer = manuf;
     this.engineCount = engineCount;
     this.isManned = isManned;
-    this.id = 0;
+    this.id = 0;                    // may actually need to be set based on the
+    // result of loading this data to a server somewhere
 
-    this.entityName = function () { // a function within the function
+    this.entityName = function () {     // Invoking a Function with a Function Constructor
         return Aircraft.entityName;
     }
 }
 
+let mustang = new Aircraft("Mustant", "North American Aviation", 1);
+mustang.id = 292734740942; // example
+
 // There's a lot going on here.  On the parameters side, if an argument is not supplied 
-// by the function call, there is a default parameter value ready to fill it.  
+// by the function call, there is a default parameter value ready to fill it ( see "isManned" ).
 // That being said, you can't skip paramters and hope it works.  Parameters are applied
 // in the order they are called.
 
