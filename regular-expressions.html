@@ -1,0 +1,108 @@
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+        <!-- #region Sabio Code - You can Fold this region to remove it from sight -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Sabio Coding Bootcamp" />
+        <meta itemprop="image" content="https://sabio.la/Sabio.png">
+        <link rel="shortcut icon" href="https://sabio.la/Sabio.png">
+        <link rel="icon" type="image/png" href="https://sabio.la/Sabio.png" />
+        <!-- Do Not Change the HTML title or anything between this line and the line with the 💘's -->
+        <title>PW Execise Template</title>
+        <link href="https://pw.sabio.la/dist/all-site.css" rel="stylesheet" />
+        <script src="https://pw.sabio.la/api/js/site"></script>
+
+        <!-- #endregion -->
+        <!-- I 💘 Code, You 💘 Code, We all 💘 Code -->
+
+        <!-- 💡 All your CSS in here -->
+        <style>
+
+        </style>
+    </head>
+
+    <body class="sabio" data-ins="pw-00">
+        <!-- Do Not Edit or Remove this nav element -->
+        <nav class="do-not-remove navbar navbar-expand-md navbar-dark bg-dark sabio"></nav>
+
+         
+
+        <!-- Do Not Edit or Remove this footer element -->
+        <footer class="do-not-remove container-fluid footer mx-auto  fb-targert sabio">
+            <p class="text-center">© Sabio.la 2019</p>
+        </footer>
+
+        <!--👇🏻 All your JavaScript code goes below here inside this script tag 👇🏻 -->
+        <script id="candidateCode">
+
+
+            // ============= MAC ADDRESS MATCHING ====================================
+            // must succeed cases
+            let mac1 = "00:00:00:00:00:00";
+            let mac2 = "02:46:8a:bc:de:fF";
+            let mac3 = "000000000000";
+            let mac4 = "00.00.00.00.00.00";
+            let mac5 = "00-00-00-00-00-00";
+
+            let macsA = [mac1, mac2, mac3, mac4, mac5];
+            // exp2 = /([0-9a-fA-F]{2}?[\:\.\-]?){5}?[0-9a-fA-F]{2}?$/
+            //      0 "00:00:00:00:00:00" 0 true
+            //      1 "02:46:8a:bc:de:fF" 0 true
+            //      2 "000000000000" 0 true
+            //      3 "00.00.00.00.00.00" 0 true
+            //      4 "00-00-00-00-00-00" 0 true
+            
+
+            // expected fails
+            let mac21 = "00:00:00:00:00:0";
+            let mac22 = "00:00:00:00:00:00:";   
+            let mac23 = "av:35:22:c3:00:00";
+            let mac24 = "00:00:0:00:000:00";
+            let mac25 = "00:00:00:00:00:0z";
+            let mac26 = "00#00#00#00#00#00";
+            let mac27 = "00;00;00;00;00;00";
+            let mac28 = "00=00=00=00=00=00";
+
+            let macsB = [mac21, mac22, mac23, mac24, mac25, mac26, mac27, mac28];
+            // exp2 = /([0-9a-fA-F]{2}?[\:\.\-]?){5}?[0-9a-fA-F]{2}?$/
+            //      0 "00:00:00:00:00:0" -1 false
+            //      1 "00:00:00:00:00:00:" -1 false
+            //      2 "av:35:22:c3:00:00" -1 false
+            //      3 "00:00:0:00:000:00" -1 false
+            //      4 "00:00:00:00:00:0z" -1 false
+            //      5 "00#00#00#00#00#00" -1 false
+            //      6 "00;00;00;00;00;00" -1 false
+            //      7 "00=00=00=00=00=00" -1 false
+
+
+            var exp1 = /[0-9]/;
+            var exp2 = /([0-9a-fA-F]{2}?[\:\.\-]?){5}?[0-9a-fA-F]{2}?$/;
+
+
+            function checkExpression(expression, testList) 
+            {
+                let resultSearch = false;
+                let resultTest = false;
+                let currentString = "";
+                for(let i = 0; i < testList.length; i++) 
+                {
+                    currentString = testList[i];
+                    resultSearch = currentString.search(expression);
+                    resultTest = expression.test(currentString);
+                    console.log(i, currentString, resultSearch, resultTest);
+                }
+            }
+
+
+            // ============= SSN   MATCHING ====================================
+            let ssn1 = "000-00-0000";
+            let ssn2 = "000000000";
+
+
+
+        </script>
+        <!-- 🛑 Do Not Write Any Code Below here -->
+    </body>
+
+    </html>
