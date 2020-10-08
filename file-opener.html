@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- #region Sabio Code - You can Fold this region to remove it from sight -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Sabio Coding Bootcamp" />
+    <meta itemprop="image" content="https://sabio.la/Sabio.png">
+    <link rel="shortcut icon" href="https://sabio.la/Sabio.png">
+    <link rel="icon" type="image/png" href="https://sabio.la/Sabio.png" />
+    <!-- Do Not Change the HTML title or anything between this line and the line with the 💘's -->
+    <title>File Opener Test</title>
+    <link href="https://pw.sabio.la/dist/all-site.css" rel="stylesheet" />
+    <script src="https://pw.sabio.la/api/js/site"></script>
+
+    <!-- #endregion -->
+    <!-- I 💘 Code, You 💘 Code, We all 💘 Code -->
+
+    <!-- 💡 All your CSS in here -->
+    <style>
+
+    </style>
+</head>
+
+<body class="sabio" data-ins="pw-00">
+    <!-- Do Not Edit or Remove this nav element -->
+    <nav class="do-not-remove navbar navbar-expand-md navbar-dark bg-dark sabio"></nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2>
+                    Step 1: Pick a file
+                </h2>
+                <br>
+                <h2>
+                    Step 2:
+                </h2>
+                <h2>
+                    Step 3:
+                </h2>
+                <h2>
+                    Step 4:
+                </h2>
+            </div>
+            <div class="col">
+                <form name="fileGetterForm">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile">
+                        <label class="custom-file-label" for="customFile">Choose file</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col">
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Do Not Edit or Remove this footer element -->
+    <footer class="do-not-remove container-fluid footer mx-auto  fb-targert sabio">
+        <p class="text-center">© Sabio.la 2019</p>
+    </footer>
+
+    <!--👇🏻 All your JavaScript code goes below here inside this script tag 👇🏻 -->
+    <script id="myVariousTemplates">
+
+        /*
+            Custom File Upload - Bootstrap
+            To create a custom file upload, wrap a container element with a class of .custom-file
+            around the input with type="file". Then add the .custom-file-input to it.
+
+            Tip: If you use labels for accompanying text, add the .custom-file-label class to it.
+            Note that the value of the for attribute should match the id of the checkbox:
+
+            Note that you also have to include some jQuery code if you want the name of the file
+            to appear when you select a specific file:
+        */
+
+            // <form>
+            //     <div class="custom-file">
+            //         <input type="file" class="custom-file-input" id="customFile">
+            //         <label class="custom-file-label" for="customFile">Choose file</label>
+            //     </div>
+            // </form>
+
+
+        /*  BOOTSTRAP FILE UPLOAD
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+            </div>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="inputGroupFile01"
+                    aria-describedby="inputGroupFileAddon01">
+                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+            </div>
+        </div>
+        */
+            // Add the following code if you want the name of the file appear on select
+            // $(".custom-file-input").on("change", function() {
+            //      var fileName = $(this).val().split("\\").pop();
+            //      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            // });
+
+    </script>
+    <script id="candidateCode">
+
+        var dataFromFile = "";
+
+        // =========== STARTUP & EVENT HANDLING =====================================
+
+        function startUp() {
+            wireUpEvents();
+        }
+
+        function wireUpEvents() {
+            console.log("... wiredUpEvents firing ...");
+
+            $(".custom-file-input").on("change", onFileGetterEvent);
+        }
+
+        // =========== FILE GETTING =====================================
+
+        function onFileGetterEvent(e) {
+
+            let onFileChangeScope = this;
+
+            let currentFileName = updateFileNameDisplay(onFileChangeScope);
+            // console.log(currentFileName);
+
+            // access file object
+            let currentFile = accessFile();
+            console.log(currentFile.name, currentFile.size, currentFile.type);
+
+            // read file object
+            if (currentFile && (currentFile.type === "text/plain")) {
+                readFile(currentFile, dataFromFile);
+                console.log(" > > > OUTPUT > > > : ");
+            }
+
+        }
+
+        function updateFileNameDisplay(onFileChangeThis) {
+
+            var fileName = $(onFileChangeThis).val().split("\\").pop();
+            $(onFileChangeThis).siblings(".custom-file-label").addClass("selected").html(fileName);
+
+            return fileName;
+        }
+
+        function accessFile() {
+            console.log("... accessFile firing ...");
+
+            let targetFile = document.getElementById("customFile").files[0];
+
+            return targetFile;
+        }
+
+        function accessMultipleFiles() {
+            console.log("... accessMultipleFiles firing ...");
+
+            let targetFileList = document.getElementById("customFile").files;
+            let fileCount = targetFileList.length;
+            // console.log("... accessMultipleFiles firing ...", fileCount);
+
+            return targetFileList
+        }
+
+        function readFile(aFile, outputString) {
+            console.log("... readFile firing ...");
+
+            disableFileLoader();
+
+            let fileReader = new FileReader();
+            fileReader.onload = function () {
+                outputString = fileReader.result;
+                // console.log(outputString);
+                onReadFile(outputString);
+            }
+            fileReader.readAsText(aFile);
+
+            // fileReader.onload(aFile);
+            console.log(".. << closing reader >> ..");
+        }
+
+        function disableFileLoader() {
+            console.log("... disableFileLoader firing ...");
+            $(".custom-file-input").attr("disabled");
+
+        }
+
+        let fileDataByLines = [];
+
+        function onReadFile(textData) {
+            console.log("... onReadFile firing ...");
+            $(".custom-file-input").removeAttr("disabled");
+
+            dataFromFile = textData;
+            fileDataByLines = splitOnLines(textData);
+            console.log("Split by Lines - complete");
+
+            convertLineListWithTabToCompactArray(fileDataByLines);
+            console.log("Split by Tabs and Compact - complete");
+        }
+
+        function splitOnLines(textWithLineReturns) {
+            console.log("...splitOnLines firing... ");
+
+            let listOfLines = [];
+            if ((textWithLineReturns) && (typeof textWithLineReturns === "string")) {
+                listOfLines = textWithLineReturns.split("\n");  // had to be quotes and not ticks!!
+            }
+            return listOfLines;
+        }
+
+        function convertLineListWithTabToCompactArray(lineList) { // modifies existing array
+            console.log("...convertLineListWithTabToCompactArray firing... ", lineList.length);
+
+            let validArray = (lineList && (Array.isArray(lineList)));
+            if (validArray) {
+
+                for (let index = 0; index < lineList.length; index++) {
+                    const currentLine = lineList[index];
+
+                    const tempTabbedLine = splitOnTabs(currentLine);
+
+                    const compactLine = removeNulls(tempTabbedLine);
+
+                    lineList[index] = compactLine;
+                }
+            }
+
+            return validArray;
+        }
+
+        function removeNulls(arrayToCompact) {
+            console.log("...removeNulls firing... ", arrayToCompact);
+
+            if (arrayToCompact && (Array.isArray(arrayToCompact))) {
+                let removalList = [];
+                //let validChar = /[0-9a-fA-F]/;
+
+                for (let index = 0; index < arrayToCompact.length; index++) {
+                    const currentArrayElement = arrayToCompact[index];
+
+                    if (currentArrayElement === "" || currentArrayElement === "\n") {
+                        // || ((currentArrayElement.length === 1) && !(currentArrayElement === validChar))) {
+                        console.log("found empty string at index: ", index);
+                        removalList.push(index)
+                    }
+
+                }
+
+                if (removalList.length > 0) {
+                    for (let remIndex = removalList.length; remIndex > 0; remIndex--) {
+                        const removeThis = removalList[remIndex - 1];
+
+                        const removedItem = arrayToCompact.splice(removeThis, 1);
+                        console.log(`${remIndex} - Removed item at ${removeThis} =>${removedItem}<=`);
+                    }
+                }
+
+            }
+            console.log("FINISHED ARRAY: ", arrayToCompact)
+            return arrayToCompact;
+
+        }
+
+        function splitOnTabs(textWithTabs) {
+
+            let afterSplit = [];
+            if ((textWithTabs) && (typeof textWithTabs === "string")) {
+                afterSplit = textWithTabs.split("\t");  // had to be quotes and not ticks!!
+            }
+            return afterSplit;
+        }
+
+        let testTABS = `this\tis\t283830:0229\t \t\twhat I'm trying to test`;
+
+        // ================= DATA STRUCTURES ======================
+
+        // SWITCH  (reporting "Managed" switches  and non-reporting simple switches differentiation?)
+        // - list of ports\
+
+        // CONNECTED DEVICE
+        // - single port assumed
+
+        // PORT on a switch or a connected device
+        // - automatically designate single enitity ports
+        // - automatically designate 'trunk' ports
+
+        // UNIQUE MAC ADDRESS
+        //  - IP Address
+        //  - which switch sees me, and on which port(s)
+
+        // PATHWAY
+        // - connects two devices
+
+        // General algorithm
+        // Assumes single pathway network infrastructure
+        // Each switch has a notional node between it and another switch / entity
+        // Trunk ports will have similar node patterns across multiple entities
+        // similar nodes can be collapsed
+        //
+        // One algorithm to identify single entity ports from trunk ports
+        //
+        // One algorithm to collapse trunk port references into a single pathway
+        // 
+        // Reporting switches
+        // Non-reporting switches
+        //
+        // Find all devices that can talk to a particular device and create a chain / heirarchy
+        // based on steps.  Initially, the immediately identifiable single port connection to a 
+        // switch is given a 10 value.
+        // All other nodes are given a 100 value
+
+    </script>
+    <!-- 🛑 Do Not Write Any Code Below here -->
+</body>
+
+</html>
