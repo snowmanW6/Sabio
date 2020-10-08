@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- #region Sabio Code - You can Fold this region to remove it from sight -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Sabio Coding Bootcamp" />
+    <meta itemprop="image" content="https://sabio.la/Sabio.png">
+    <link rel="shortcut icon" href="https://sabio.la/Sabio.png">
+    <link rel="icon" type="image/png" href="https://sabio.la/Sabio.png" />
+    <!-- Do Not Change the HTML title or anything between this line and the line with the 💘's -->
+    <title>PW Lab: Entities of Aircraft</title>
+    <link href="https://pw.sabio.la/dist/all-site.css" rel="stylesheet" />
+    <script src="https://pw.sabio.la/api/js/site"></script>
+    <script src="https://unpkg.com/axios@0.19.2/dist/axios.min.js"></script>
+    <script src="entityService.js"></script>
+    <script src="aircraft-object.js"></script>
+    <script src="select-lib.js"></script>
+
+
+
+    <!-- #endregion -->
+    <!-- I 💘 Code, You 💘 Code, We all 💘 Code -->
+
+    <!-- 💡 All your CSS in here -->
+    <style>
+
+    </style>
+</head>
+
+<body class="sabio" data-ins="pw-00">
+    <!-- Do Not Edit or Remove this nav element -->
+    <nav class="do-not-remove navbar navbar-expand-md navbar-dark bg-dark sabio"></nav>
+
+    <div class="container ajax sabio" style="display: none;"></div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h2>Aircraft Types - Public Website - Data Entry and Management Portal</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="formSection">
+        <form id="aircraftLoading">
+            <div class="uniqueTagHolder" style="display: none;"></div>
+            <div class="row my-2">
+                <div class="col-md-6">
+                    <div class="form-group bg-dark text-white">
+                        <label for="nameInput" class="px-3">Please enter the Common Aircraft Name:</label>
+                        <input type="text" class="form-control mx-2" id="nameInput" name="nameInput"
+                            placeholder="Long Easy -or- Meteor">
+                    </div>
+                    <div class="form-group bg-light">
+                        <label for="nicknameInput" class="px-3">Enter the Aircraft Nickname (if it has one):</label>
+                        <input type="text" class="form-control" id="nicknameInput" name="nicknameInput"
+                            placeholder="Old Faithful">
+                    </div>
+                    <div class="form-group">
+                        <label for="designationInput" class="px-3">Enter the Aircraft Alphanumeric Designation:</label>
+                        <input type="text" class="form-control" id="designationInput" name="designationInput"
+                            placeholder="SR-71 -or- C-150">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group bg-dark text-white">
+                        <label for="manufacturerInput" class="px-3">Enter the Aircraft Manufacturer:</label>
+                        <input type="text" class="form-control mx-2" id="manufacturerInput" name="manufacturerInput"
+                            placeholder="Northrop -or- Cessna">
+                    </div>
+                    <div class="form-group bg-light">
+                        <label for="startYearInput" class="px-3">Year of First Flight</label>
+                        <select class="form-control yearSelect" id="startYearInput" name="startYearInput">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="endYearInput" class="px-3">Last Year of Flight Operations (not including private or
+                            museum
+                            use)</label>
+                        <select class="form-control yearSelect" id="endYearInput" name="endYearInput">
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group bg-secondary text-white">
+                <label for="infoUrlInput" class="px-3">Enter a URL that will provide more information on the history of
+                    this
+                    aircraft:</label>
+                <input type="text" class="form-control mx-2" id="infoUrlInput" name="infoUrlInput"
+                    placeholder="https://yourDesired.sourceInfo.here">
+            </div>
+            <div class="form-group">
+                <label for="photoUrlInput" class="px-3">Enter a URL that links to a photo of this aircraft:</label>
+                <input type="text" class="form-control" id="photoUrlInput" name="photoUrlInput"
+                    placeholder="https://yourDesired.pictureLink.here">
+            </div>
+
+            <!-- AIRCRAFT ALTERNATE VERSION OR DESIGNATION SECTION -->
+            <div class="row bg-light mx-1 mb-1 pt-1">
+                <div class="col-sm-7 ">
+                    <div class="form-group">
+                        <label for="altDesignationInput">Some Aircraft have versions or designations. Enter here, adding
+                            one
+                            at a time:</label>
+                        <div class="row ">
+                            <div class="col-sm-6 ">
+                                <input type="text" class="form-control" id="altDesignationInput"
+                                    name="altDesignationInput" placeholder="C-152 -or- A-10C">
+                            </div>
+                            <div class="col-sm-6 ">
+                                <button type="button" class="btn btn-secondary" id="altDesignationButton" disabled>Add
+                                    Designation</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" id="target-altDesig-clones">
+            </div>
+
+            <!-- AIRCRAFT MANNED CHECKBOX SECTION -->
+            <div class="form-group form-check bg-secondary text-white p-1">
+                <div class="col ml-3">
+                    <input type="checkbox" class="form-check-input" id="mannedInput" name="mannedInput" checked>
+                    <label class="form-check-label" for="mannedInput">Manned aircraft</label>
+                </div>
+
+            </div>
+
+            <!-- AIRCRAFT ENGINE TYPE AND COUNT SECTION -->
+            <fieldset class="form-group engineSection">
+                <div class="row">
+
+                    <legend class="col-form-label col-sm-2 pt-0 ml-2">Engine Type:</legend>
+                    <div class="col-sm-4">
+                        <div class="form-check">
+                            <input class="form-check-input engineradio" type="radio" name="engineTypeRadios"
+                                id="engineType0" value="none" checked>
+                            <label class="form-check-label" for="engineType0">
+                                No engine
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input engineradio" type="radio" name="engineTypeRadios"
+                                id="engineType1" value="recip int cmbstn">
+                            <label class="form-check-label" for="engineType1">
+                                Reciprocating Internal Combustion Piston
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input engineradio" type="radio" name="engineTypeRadios"
+                                id="engineType2" value="elec">
+                            <label class="form-check-label" for="engineType2">
+                                Electric
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input engineradio" type="radio" name="engineTypeRadios"
+                                id="engineType3" value="nuclear" disabled>
+                            <label class="form-check-label" for="engineType3">
+                                Nuclear
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-check">
+                            <input class="form-check-input engineradio" type="radio" name="engineTypeRadios"
+                                id="engineType4" value="jet turboprop">
+                            <label class="form-check-label" for="engineType4">
+                                Jet Turboprop
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input engineradio" type="radio" name="engineTypeRadios"
+                                id="engineType5" value="jet turbofan hi">
+                            <label class="form-check-label" for="engineType5">
+                                Jet Turbofan - High Bypass
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input engineradio" type="radio" name="engineTypeRadios"
+                                id="engineType6" value="jet turbofan lo">
+                            <label class="form-check-label" for="engineType6">
+                                Jet Turbofan - Low Bypass
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input engineradio" type="radio" name="engineTypeRadios"
+                                id="engineType7" value="solid liq not air">
+                            <label class="form-check-label" for="engineType7">
+                                Non Air Breathing - Solid / Liquid Fuel
+                            </label>
+                        </div>
+
+
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-8 text-right">
+                        <div class="row">
+                            <div class="col=sm-3 pt-1">
+                                <div class="form-check">
+                                    <input class="radio-inline form-check-input engineradio" type="radio"
+                                        name="engineTypeRadios" id="engineType8" value="other">
+                                    <label class="form-check-label" for="engineType8">
+                                        Other:
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <input placeholder="Scramjet" type="text" class="form-control"
+                                        id="otherEngineTypeInput" name="otherEngineTypeInput" disabled>
+                                    <!-- contenteditable="false" -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </fieldset>
+            <div class="form-group bg-light">
+                <label for="engineCountInput" class="px-3 pt-1">Enginge count:</label>
+                <select class="form-control" id="engineCountInput" name="engineCountInput">
+                    <option selected>Select number of propulsion engines</option>
+                    <option>0 - Glider / Hot air balloon</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="narrativeInput" class="px-3">Aircraft Historical Narrative:</label>
+                <textarea class="form-control" id="narrativeInput" rows="3"></textarea>
+            </div>
+
+            <!-- LOWER SECTION CONTROL BUTTONS -->
+            <div class="form-group form-check bg-dark text-white py-1 ">
+                <div class="col ml-3">
+                    <input type="checkbox" class="form-check-input" id="clearFormCheck" name="clearFormCheck" checked>
+                    <label class="form-check-label" for="clearFormCheck" id="clearFormLabel">Clear Form on
+                        Submit?</label>
+                </div>
+
+            </div>
+            <button type="button" class="btn btn-primary sstate1" id="submitButton">Submit</button>
+            <button type="button" class="btn btn-primary ustate1" id="updateButton" disabled>Update</button>
+            <button type="button" class="btn btn-secondary d-none" id="editButton">Edit...</button>
+            <button type="button" class="btn btn-info" data-display="0" id="displayAllButton">Display All</button>
+            <button type="button" class="btn btn-secondary" id="backupButton">Download Backup</button>
+
+            <button type="button" class="btn btn-danger float-right" id="clearButton">Clear Form</button>
+
+        </form>
+    </div>
+    <br>
+    <div class="container" id="breakSection">
+        <div class="col">
+            <div class="row">
+                <br>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <div class="clone-container container" id="displaySection">
+        <div class="card mb-3" style="max-width: 1080px; display: none;">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/375th_Fighter_Squadron_North_American_P-51D-5-NA_Mustang_44-13926_%28cropped%29.jpg/300px-375th_Fighter_Squadron_North_American_P-51D-5-NA_Mustang_44-13926_%28cropped%29.jpg"
+                        class="card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="card-title">P-51 Mustang "THE TEST CASE"</h5>
+                            </div>
+                            <div class="col">
+                                <h6 class="card-years">1907-Still Operational</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="card-manuf">North American Aircraft (NAA)</h6>
+                            </div>
+                            <div class="col">
+                                <h6 class="card-engine">Reciprocating Internal combustion</h6>
+                            </div>
+                        </div>
+                        <p class="card-designations">This the example card to gauge the programitic results during
+                            cloning etc.</p>
+                        <div class="row">
+                            <div class="col">
+                                <p class="card-weblink">Info link here</p>
+                            </div>
+                            <div class="col">
+                                <p class="card-future">Future expansion catch-all</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <p class="card-text"><small class="text-muted createdate">Created:</small></p>
+                            </div>
+                            <div class="col">
+                                <p class="card-text"><small class="text-muted moddate">Last updated 3 mins
+                                        ago</small></p>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-secondary cardEditButton ">Edit...</button>
+                                <button type="button" class="btn btn-danger cardDeleteButton ">Delete</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <div class="container" id="cloneSection" style="display: none;">
+        <div class="template" id="cloneAltDesig">
+            <div class="removableLabel alert alert-secondary col-sm-2 mx-1 " role="alert" style="min-width: 170px;">
+                <h5 class="textHere">A-10 0 0 0 0 </h5>
+            </div>
+        </div>
+        <div class="template" id="cloneHorizontalCard">
+
+            <div class="card mb-3 aircraftCard" style="max-width: 1800px;">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/375th_Fighter_Squadron_North_American_P-51D-5-NA_Mustang_44-13926_%28cropped%29.jpg/300px-375th_Fighter_Squadron_North_American_P-51D-5-NA_Mustang_44-13926_%28cropped%29.jpg"
+                            class="card-img" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="d-none hiddenPocket"></div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title">P-51 Mustang "Peter Dash Flash"</h5>
+                                </div>
+                                <div class="col text-center">
+                                    <h6 class="card-years">1907-Still Operational</h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <h6 class="card-manuf">North American Aircraft (NAA)</h6>
+                                </div>
+                                <div class="col">
+                                    <p class="card-engine">Reciprocating Internal combustion</p>
+                                </div>
+                            </div>
+                            <p class="card-designations bg-light text-dark">This is a wider card with supporting text
+                                below as a
+                                natural
+                                lead-in to additional content. This content is a little bit longer.</p>
+                            <div class="row">
+                                <div class="col bg-dark text-center">
+                                    <p class="card-weblink px-3"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="card-futureExp"></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p class="card-text"><small class="text-muted createdate">Created:</small></p>
+                                </div>
+                                <div class="col">
+                                    <p class="card-text"><small class="text-muted moddate">Last updated 3 mins
+                                            ago</small></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-secondary cardEditButton ">Edit...</button>
+                                    <button type="button" class="btn btn-danger cardDeleteButton ">Delete</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mx-3">
+                    <div class="col-md-12">
+                        <p class="card-narrative"></p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Do Not Edit or Remove this footer element -->
+    <footer class="do-not-remove container-fluid footer mx-auto  fb-targert sabio">
+        <p class="text-center">© Sabio.la 2019</p>
+    </footer>
+
+    <!--👇🏻 All your JavaScript code goes below here inside this script tag 👇🏻 -->
+    <script id="candidateCode">
+
+        // ----------- TEST OBJECTS AND EXMPLE OBJECTS
+
+        // console.log("mustang", mustang);
+
+        function ItemToChange(name, id, jQobj = null) {
+            this.name = name;
+            this.id = id;
+            this.jQobj = jQobj;
+            this.displayListIndex = -1;
+            this.failedToDelete = false;
+        }
+
+        var deleteList = [];
+        let currentDisplayList = [];
+        let updateList = [];
+        let needsToConfirm = true;
+        let captureChanges = false;
+
+        // ----------- STARTUP --------------------------------
+
+        function startUp() {
+            console.log("... startUp firing ...");
+            wiredUpButtons();
+
+            // addEntity("aircraft", mustang); //2085289031
+            // addEntity("aircraft", lightning);
+            // addEntity("aircraft", mitchell);
+
+            // updateEntity("aircraft", "2085289031", ww2AircraftA);
+            // getAllEntitiesInCategory("aircraft");
+        }
+
+        function wiredUpButtons() {
+            // console.log("... wiredUpButtons firing ...");
+
+            generateYearData(1907, 2020, "startYearInput");
+            generateYearData(1907, 2020, "endYearInput");
+
+            $("#submitButton").on("click", onFormSubmit);
+            $("#updateButton").on("click", onFormUpdate);
+            $("#displayAllButton").on("click", onDisplayAll);
+            $("#backupButton").on("click", onBackup);
+
+            $("#clearButton").on("click", onClearForm);
+
+            // $("#editButton").on("click", onFormEdit); 
+
+            $(".engineradio").on("click", onEngineRadioChange);
+
+            $("#altDesignationInput").keyup(onAltDesignationDataEntry);
+            $("#altDesignationButton").on("click", onAltDesigSubmit);
+            $("#target-altDesig-clones").on("click", ".removeX", onRemoveAltDesigLabel);
+
+            $(".displayAircraftCard").on("click", onDisplayAll);
+
+            $("#displaySection").on("click", ".cardDeleteButton", onAircraftCardDelete);
+            $("#displaySection").on("click", ".cardEditButton", onAircraftCardEdit);
+        }
+
+
+        // ======================== EVENT HANDLERS ========================
+
+        function onDisplayAll(e) {
+            console.log("... onDisplayAll firing ...");
+
+            getAllAircraftForRendering();
+
+            displayButtonToggle();
+        }
+
+        function onFormEdit(e) {                // XXX
+            console.log("... onFormEdit firing ...");
+
+        }
+
+        function onBackup(e) {                  // XXX
+
+        }
+
+        function onAircraftCardDelete(e) {
+            console.log("... onAircraftCardDelete firing ...");
+            let thisCard = $($(this).closest(".aircraftCard"));
+
+            thisCard.addClass("bg-danger", "text-white");
+
+            const warnMessage = "Deleting this aircraft is irrevocable \n"
+                + "Do you wish to continue?"
+
+            if (confirm(warnMessage)) {
+
+                let tagObj = acCardUniqueTagReader(thisCard);
+                initiateDeletion(tagObj, thisCard);
+
+            } else {
+
+                thisCard.removeClass("bg-danger", "text-white");
+            }
+        }
+
+        function onAircraftCardEdit(e) {
+            console.log("... onAircraftCardEdit firing ...");
+            let thisCard = $($(this).closest(".aircraftCard"));
+
+            const canProceed = confirmBeforeClear();
+            if (canProceed) {
+                updateList = [];
+                thisCard.addClass("bg-warning");
+                thisCard.addClass("text-white");
+                formWritingInitiator(thisCard);
+                // Add jQuery animate scroll
+            }
+            // CHANGE BG COLOR WARNING
+        }
+
+        function onFormSubmit(e) {
+            console.log("... onFormSubmit firing ...");
+            e.preventDefault();
+
+            let formContents = getFormData();
+            console.log("Result :", formContents);
+
+            let isValid = checkFormDataIsValid(formContents);
+            if (isValid) {
+
+                if (captureChanges) {   // Has display buttton been pushed?
+                    displayButtonToggle();
+                }
+
+                addEntity(
+                    formContents.entityName()
+                    , formContents
+                );
+
+                let canClearForm = $("#clearFormCheck").prop("checked");
+                if (canClearForm) {
+                    clearForm();
+                }
+            }
+        }
+
+        function onFormUpdate(e) {
+            console.log("... onFormUpdate firing ...");
+            e.preventDefault();
+
+            let formContents = getFormData();
+            console.log("Result :", formContents);
+
+            const entityReference = retrieveUniqueTag();
+
+            let isValid = checkFormDataIsValid(formContents);
+            if (isValid && entityReference) {
+
+                displayButtonToggle();
+
+                console.log(entityReference.entityName
+                    , entityReference.entityId, formContents);
+                updateAircraft(entityReference.entityName
+                    , entityReference.entityId, formContents);
+            }
+        }
+
+        function onClearForm(e) {
+            // console.log("... onClearForm firing ...");      //clearFormCheck
+
+            if (needsToConfirm) {
+                const canClear = confirmBeforeClear();
+                if (canClear) {
+                    clearForm();
+                }
+            } else {
+                clearForm();
+            }
+        }
+
+        function onClearDisplay(e) {    // XXX remove all cards from display
+            // console.log("... onClearDisplay firing ...");      //clearFormCheck
+            // if (needsToConfirm) {
+            //     const canClear = confirmBeforeClear();
+            //     if (canClear) {
+            //         clearForm();
+            //     }
+            // } else {
+            //     clearForm();
+            // }
+        }
+
+        function onEngineRadioChange() {
+            // console.log("... onEngineRadioChange firing ...");
+            if ($("input[name='engineTypeRadios']:checked").val() === "other") {
+                // console.log("... other selected ...");
+
+                $("#otherEngineTypeInput").prop("disabled", false);
+            }
+            else {
+                $("#otherEngineTypeInput").prop("disabled", true);
+                // console.log("... a diff radio button selected ...");
+            }
+        }
+
+        function onAltDesigSubmit(e) {
+            // console.log("... onAltDesigSubmit firing ...");
+            renderAltDesignation();
+            $("#altDesignationButton").prop("disabled", true);
+        }
+
+        function onRemoveAltDesigLabel(e) {
+            // console.log("... onRemoveAltDesigLabel firing ...");
+            let thisLabel = this.closest(".removableLabel");
+            thisLabel.remove();
+        }
+
+        function onAltDesignationDataEntry(e) {
+            // console.log("... onAltDesignationDataEntry firing ...");
+
+            let altDesignator = $("#altDesignationInput");
+            let altDesigData = altDesignator.val();
+
+            if (altDesigData.length > 2) {
+                $("#altDesignationButton").prop("disabled", false);
+
+            } else {
+                $("#altDesignationButton").prop("disabled", true);
+            }
+        }
+
+        function displayButtonToggle() {
+            let displayButton = $("#displayAllButton");
+            let currentState = displayButton.attr("data-display");
+
+            switch (currentState) {
+
+                case "1":
+                    console.log(" attempting ", currentState);
+
+                    displayButton.prop("disabled", true);
+                    displayButton.addClass("btn-secondary");
+                    displayButton.removeClass("btn-warning");
+                    displayButton.text(".. Complete ..");
+                    displayButton.attr("data-display", "0");
+
+                    break;
+
+                case "2":
+                    console.log(" attempting ", currentState);
+
+                    displayButton.prop("disabled", false);
+                    displayButton.addClass("btn-secondary");
+                    displayButton.removeClass("btn-warning");
+                    displayButton.text("Refresh Display");
+                    displayButton.attr("data-display", "0");
+
+                    break;
+
+                default:
+
+                    console.log(" attempting default ", currentState);
+
+                    captureChanges = true;
+
+                    displayButton.prop("disabled", true);
+                    displayButton.addClass("btn-warning");
+                    displayButton.removeClass("btn-info");
+                    displayButton.text("..Rendering..");
+                    displayButton.attr("data-display", "1");
+
+                    break;
+            }
+
+        }
+
+
+        // ------------ ALTERNATE DESIGNATION RENDERING ON FORM ------------------
+
+        function renderAltDesignation(insertText = null) {
+            console.log("... addAltDesignation firing ...");
+
+            const cloneToLocation = $("#target-altDesig-clones");
+            const labelX = `<button type="button" class="btn btn-secondary btn-sm float-right removeX">X</button>`;
+            let labelToAdd = getTemplate("#cloneAltDesig");
+
+            let textToAdd = "";
+            if (insertText) {
+                textToAdd = insertText;
+            } else {
+                textToAdd = $("#altDesignationInput").val();
+            }
+
+            const buttonInsert = labelToAdd.find("h5").clone();
+
+            console.log(textToAdd, buttonInsert);
+            // get template
+            labelToAdd.find(".textHere").html(textToAdd + labelX);
+
+            cloneToLocation.append(labelToAdd);
+        }
+
+        function collectAltDesignations() {
+            let designations = $("#target-altDesig-clones").children();
+            let resultingList = [];
+
+            // console.log("... collectAltDesignations firing ...", designations);
+
+            for (let index = 0; index < designations.length; index++) {
+                const currentLabel = designations[index];
+                const labelText = $(currentLabel).text().trim();
+                const trimmedText = labelText.slice(0, -1);
+
+                // console.log("Something? ", labelText, trimmedText);
+
+                let isDuplicate = checkDesignationList(trimmedText, resultingList);
+                if (!isDuplicate) {
+                    resultingList.push(trimmedText);
+                }
+            }
+            return resultingList;
+        }
+
+        let checkDesignationList = (text, listToCompare) => {
+            let match = false;
+            for (let index = 0; index < listToCompare.length; index++) {
+                const currentListItem = listToCompare[index];
+                if (currentListItem === text) {
+                    match = true;
+                    break;
+                }
+            }
+            return match;
+        }
+
+        function removeAllAltDesignations() {
+            console.log("... removeAltDesignation firing ...");
+            $("#target-altDesig-clones").empty();
+        }
+
+
+        // ------------ FORM SUBMISSION AND MANAGEMENT - ENTITY BUILDING ----------------------------
+
+        // ----- GET FORM
+        function getFormData(formToDigest) {
+            console.log("... digesting form: ", formToDigest);
+
+            // let aircraftName = $("#nameInput").val();
+            // let aircraftDesig = $("#designationInput").val();
+            // let aircraftManuf = $("#manufacturerInput").val();
+            // let aircraftEngineCount = $("#engineCountInput").val();
+            // let aircraftNickname = $("#nicknameInput").val();
+            // let isManned = $("#mannedInput").prop("checked");
+            // let aircraftPhotoUrl = $("#photoUrlInput").val();
+            // let aircraftInfoUrl = $("#infoUrlInput").val();
+
+            let aircraftEngineType = $("input[name='engineTypeRadios']:checked").val();
+            if (aircraftEngineType === "other") { //otherEngineTypeInput
+                aircraftEngineType = "Other: " + $("#otherEngineTypeInput").val();
+            }
+
+            let aircraftAltDesig = collectAltDesignations();
+
+            let narrative = $("#narrativeInput").val().trim();
+
+            let resultingAircraft = new Aircraft(
+                $("#nameInput").val()
+                , $("#designationInput").val()
+                , $("#manufacturerInput").val()
+                , $("#startYearInput").val()
+                , $("#endYearInput").val()
+                , aircraftEngineType
+                , $("#engineCountInput").val()
+                , $("#nicknameInput").val()
+                , $("#mannedInput").prop("checked")
+                , aircraftAltDesig
+                , $("#photoUrlInput").val()
+                , $("#infoUrlInput").val()
+                , narrative
+            );
+
+            let now = new Date();
+            let dateTime = now.toString();
+            // console.log(now, dateTime);
+            resultingAircraft.dateAdded = dateTime;
+            resultingAircraft.dateModified = dateTime;
+
+            return resultingAircraft;
+        }
+
+        function checkFormDataIsValid(formObjToCheck) {
+            let result = false;
+            let errorList = "";
+
+            if (formObjToCheck.name === "") {
+                errorList += "Every aircraft needs a name <br/>";
+            }
+            if (formObjToCheck.manufacturer === "") {
+                errorList += "Every aircraft needs a manufacturer <br/>";
+            }
+
+            if (errorList === "") {
+                result = true;
+            } else {
+                console.error(errorList);
+            }
+            return result;
+
+        }
+
+        // ----- WRITE FORM
+        function formWritingInitiator(aircraftCard) {
+            // from: edit button being pushed on card
+
+            let entityId = 0;
+            let entityName = "aircraft";
+
+            if (aircraftCard) {
+
+                thisTag = acCardUniqueTagReader(aircraftCard);
+                entityId = parseInt(thisTag.entityId);
+                entityName = thisTag.entityName;
+                console.log(thisTag, entityId, entityName);
+            }
+
+            thisItemToChange = new ItemToChange(
+                entityName, entityId, aircraftCard
+            );
+
+            displayData = checkDisplayList(entityId);
+
+            if (displayData.found) {
+
+                thisItemToChange.displayListIndex = displayData.index;
+                updateList.push(thisItemToChange);
+
+                console.log(displayData.index, entityName
+                    , currentDisplayList[displayData.index])
+
+                writeFormData(entityName
+                    , currentDisplayList[displayData.index]);
+
+            }
+        }
+
+        // function editNonDisplayed(entityName, entityId) {    // XXX  Edit... future functionality
+        //     {   
+        //         // This is to allow use of a select to edit drop-down combo
+        //         // or modal pop-up.  (Edit... button)
+        //         // If the item is not currently on display, then I'll go get it
+        //         // ... Otherwise, flowControl my not be needed.
+
+        //         getEntity(entityName, entityId, "writeFormData");
+        //     }
+        // }
+
+        function checkDisplayList(entityId) {
+
+            let displayResults = {
+                found: false
+                , index: -1
+            }
+
+            let listLength = currentDisplayList.length;
+
+            if (listLength > 0) {
+
+                for (let index = 0; index < listLength; index++) {
+                    const currentDisplayItem = currentDisplayList[index];
+                    const numId = parseInt(currentDisplayItem.id);
+                    if (numId === entityId) {
+                        displayResults.index = index;
+                        displayResults.found = true;
+                        break;
+                    }
+                }
+            }
+            return displayResults;
+        }
+
+        function writeFormData(entityName, aircraftObj) {
+            if (!aircraftObj || !entityName) return;
+
+            console.log("... writeFormData firing ...", aircraftObj);
+
+            clearForm();
+
+            placeUniqueTag(entityName, aircraftObj.id);
+
+            $("#nameInput").val(aircraftObj.name);
+            $("#designationInput").val(aircraftObj.designation);
+            $("#manufacturerInput").val(aircraftObj.manufacturer);
+            $("#nicknameInput").val(aircraftObj.nickname);
+            $("#engineCountInput").val(aircraftObj.engineCount);
+            $("#startYearInput").val(aircraftObj.startYear);
+            $("#endYearInput").val(aircraftObj.endYear);
+            $("#photoUrlInput").val(aircraftObj.photoUrl);
+            $("#infoUrlInput").val(aircraftObj.sourceInfoUrl);
+            $("#narrativeInput").val(aircraftObj.narrative);
+
+            loadDesignations(aircraftObj.alternateDesignations);
+
+            if (aircraftObj.isManned) {
+                $("#mannedInput").prop("checked", true);
+            } else {
+                $("#mannedInput").prop("checked", true);
+            }
+
+            selectCheckedEngineType(aircraftObj.engineType, engineTypes);
+
+            enableUpdateButton();
+        }
+
+        function selectCheckedEngineType(storedText, engineTypeList) {
+
+            const matchingEngType =
+                getEngineDataByShortName(storedText, engineTypeList);
+
+            const matchingEngTypeId = matchingEngType.id;
+
+            if (matchingEngType.index === engineTypeList.length - 1) {
+
+                $("#otherEngineTypeInput").val(storedText);
+            }
+
+            document.getElementById(matchingEngTypeId).checked = true;
+        }
+
+        function loadDesignations(listOfDesignations) {
+            if (listOfDesignations && Array.isArray(listOfDesignations)) {
+                for (let index = 0; index < listOfDesignations.length; index++) {
+                    const currentDesig = listOfDesignations[index];
+                    renderAltDesignation(currentDesig);
+                }
+            }
+        }
+
+        function enableUpdateButton() {
+            $("#updateButton").prop("disabled", false);
+            $("#submitButton").prop("disabled", true);
+            $("#clearFormLabel").text("Clear Form on Update?");
+        }
+
+        function enableSubmitButton() {
+            $("#updateButton").prop("disabled", true);
+            $("#submitButton").prop("disabled", false);
+            $("#clearFormLabel").text("Clear Form on Submit?");
+        }
+
+        // ----- CLEAR FORM
+        function clearForm() {
+            console.log("... clearForm firing ...");
+
+            document.getElementById("aircraftLoading").reset();
+            removeAllAltDesignations();
+            clearUniqueTag();
+
+            enableSubmitButton()
+        }
+
+        function confirmBeforeClear() {
+            const resetTextWarning =
+                "You are about to reset the form and lose any data not saved.\n"
+                + "Press Cancel to return to keep the form as is.\n"
+                + "Press OK to continue.";
+            let isOkToClear = confirm(resetTextWarning);
+
+            return isOkToClear;
+        }
+
+
+        // ======================== CARD RENDERING SECTION ==========================
+
+        function getAllAircraftForRendering() {
+            console.log("... getAircraftForRendering firing ...");
+
+            let currentList = new AircraftList("aircraft");
+
+            changeList.push(currentList);    // temporary assignment for observation
+
+            currentList.getAll();
+        }
+
+        function AircraftList(entityName) {
+            this.entityName = entityName;
+            this.responseList = [];
+
+            this.getAll = function () {
+                entityService
+                    .getAll(this.entityName)
+                    .then(onGetAllSuccess)
+                    .catch(onGetAllError);
+            };
+
+            var onGetAllSuccess = data => {
+                console.log("onGetAllSuccess", data);
+                // console.log("this", this);
+                this.responseList = data.items;
+                processArrayByMapping(this.responseList);
+
+                currentDisplayList = this.responseList;
+
+                displayButtonToggle();
+            }
+
+            var onGetAllError = err => {
+                console.log("onGetAllError", err.responseText);
+                console.log(err);
+            }
+        }
+
+        // function getAllAircraftPromiseCall(entityName) {
+        //     let currentList = new AircraftList(entityName);
+
+        //     changeList.push(currentList);
+        //     currentList.getAll();
+        // }
+
+        // function renderAircraftCards(listOfAircraft) {
+        //     // console.log("... renderAircraftCards firing ...", listOfAircraft);
+
+        //     // updateAircraftCard(mustang);
+
+        //     if (listOfAircraft
+        //         && Array.isArray(listOfAircraft)) {
+
+        //         for (let index = 0; index < listOfAircraft.length; index++) {
+        //             const currentAircraft = listOfAircraft[index];
+
+        //             updateAircraftCard(currentAircraft);
+        //             // console.log(index, currentAircraft.name)
+        //         }
+        //     }
+        //     displayButtonToggle();
+        //     updateList = [];  // Reseting the Update List when all cards are current
+        // }
+
+        function processArrayByMapping(listOfAircraft) {
+
+            let arrayofJqTemplates = listOfAircraft.map(mapSingleAircraft);
+            $(".clone-container").append(arrayofJqTemplates);
+        }
+
+        function mapSingleAircraft(aircraftObj     // XXX
+            , currentIndex
+            , originalArray
+            , alternateTemplt   // if updating an existing aircraft card, use this
+        ) {
+            // First three parameters are for mapping, if updating an existing
+            //  card, use first and fourth, with nulls for second and third
+
+            console.log("... mapSingleAircraft firing ...");
+
+            let isUpdate = false;
+            let aircraftCard = null;
+            if (alternateTemplt) {
+                aircraftCard = alternateTemplt;
+                isUpdate = true;
+            } else {
+                aircraftCard = getTemplate("#cloneHorizontalCard");
+            }
+
+            const newTitle = acCardConstructTitle(aircraftObj);
+            const newDateRange = acCardOperationalDateInsert(aircraftObj);
+            const dateCreated = acCardDateCreated(aircraftObj);
+            const dateModified = acCardDateMod(aircraftObj);
+            const engineTypeDesc = acCardEngineType(aircraftObj);
+            const manuf = acCardManuf(aircraftObj);
+
+            const variants = acDesigVariants(aircraftObj);
+            const newFuture = ""; //FUTURE EXPANSION HERE
+            const infoLink = acInfoURL(aircraftObj);
+            const narrative = acNarrative(aircraftObj);
+
+            acPhoto(aircraftObj, aircraftCard);
+
+            acCardSetUniqueTag(aircraftObj, aircraftCard);
+
+            aircraftCard.find(".card-title").text(newTitle);
+            aircraftCard.find(".card-years").text(newDateRange);
+            aircraftCard.find(".createdate").text(dateCreated);
+            aircraftCard.find(".moddate").text(dateModified);
+            aircraftCard.find(".card-engine").text(engineTypeDesc);
+            aircraftCard.find(".card-weblink").html(infoLink);
+            aircraftCard.find(".card-designations").text(variants);
+            aircraftCard.find(".card-futureExp").text(newFuture);
+            aircraftCard.find(".card-manuf").text(manuf);
+            aircraftCard.find(".card-narrative").text(narrative);
+
+            aircraftObj.card = aircraftCard;
+
+            if (isUpdate) {
+
+                aircraftCard.removeClass("text-white");
+                aircraftCard.removeClass("bg-warning");
+                aircraftCard.addClass("bg-info");
+
+            } else {
+                acCardSetUniqueTag(aircraftObj, aircraftCard);
+            }
+
+            return aircraftCard;
+        }
+
+        // function updateAircraftCard(aircraftObj, existingCard = null) {      // XXX
+        //     console.log("... updateAircraftCard firing ...");
+
+        //     let isUpdate = false;
+        //     let aircraftCard = null;
+        //     if (existingCard) {
+        //         aircraftCard = existingCard;
+        //         isUpdate = true;
+        //     } else {
+        //         aircraftCard = getTemplate("#cloneHorizontalCard");
+        //     }
+
+        //     const newTitle = acCardConstructTitle(aircraftObj);
+        //     const newDateRange = acCardOperationalDateInsert(aircraftObj);
+        //     const dateCreated = acCardDateCreated(aircraftObj);
+        //     const dateModified = acCardDateMod(aircraftObj);
+        //     const engineTypeDesc = acCardEngineType(aircraftObj);
+        //     const manuf = acCardManuf(aircraftObj);
+        //     const variants = acDesigVariants(aircraftObj);
+        //     const newFuture = "FUTURE EXPANSION HERE";
+        //     const infoLink = acInfoURL(aircraftObj);
+        //     const narrative = acNarrative(aircraftObj);
+
+        //     acPhoto(aircraftObj, aircraftCard);
+
+        //     aircraftCard.find(".card-title").text(newTitle);
+        //     aircraftCard.find(".card-years").text(newDateRange);
+        //     aircraftCard.find(".createdate").text(dateCreated);
+        //     aircraftCard.find(".moddate").text(dateModified);
+        //     aircraftCard.find(".card-engine").text(engineTypeDesc);
+        //     aircraftCard.find(".card-weblink").html(infoLink);
+        //     aircraftCard.find(".card-designations").text(variants);
+        //     aircraftCard.find(".card-futureExp").text(newFuture);
+        //     aircraftCard.find(".card-manuf").text(manuf);
+        //     aircraftCard.find(".card-narrative").text(narrative);
+
+        //     if (!isUpdate) {
+
+        //         acCardSetUniqueTag(aircraftObj, aircraftCard)
+        //         $("#displaySection").append(aircraftCard);
+
+        //     } else {
+        //         aircraftCard.removeClass("text-white");
+        //         aircraftCard.removeClass("bg-warning");
+        //         aircraftCard.addClass("bg-info");
+
+        //         // uniqueTagId = acCardGetUniqueTagId(aircraftCard)
+        //         // document.getElementById(uniqueTagId).scrollIntoView();
+        //     }
+
+        //     return aircraftCard;
+        // }
+
+
+        // ------------ DOM ELEMENT CLONING -------------------
+
+        function getTemplate(templateId) {
+            // console.log("CLONING... getTemplate firing ...", templateId);
+
+            let templateHtml = $(templateId).html();
+
+            let jQTemplate = $(templateHtml);
+
+            jQTemplate.removeAttr("id");
+
+            return jQTemplate;
+        }
+
+        // ------------------------------------------------------
+
+        function placeUniqueTag(entityName, entityId) {//uniqueTagHolder
+
+            const newTag = uniqueTagCombinator(entityName, entityId);
+            $(".uniqueTagHolder").text(newTag);
+        }
+
+        function retrieveUniqueTag() {
+            const uniqueTag = $(".uniqueTagHolder").text();
+            console.log(uniqueTag);
+            let tagObj = null;
+
+            if (uniqueTag) {
+                tagObj = uniqueTagSplitter(uniqueTag);
+            }
+            return tagObj;
+        }
+
+        function clearUniqueTag() {
+            $(".uniqueTagHolder").text("");
+        }
+
+        // ----------------------------- RENDER HELPERS
+
+        function acCardSetUniqueTag(aircraftObj, templateCard) {
+
+            const id = aircraftObj.id;
+            const entityName = "aircraft";
+
+            const newTag = uniqueTagCombinator(entityName, id);
+            templateCard.find(".hiddenPocket").text(newTag);
+            templateCard.find(".hiddenPocket").attr("id", newTag);
+            return newTag;
+        }
+
+        function acCardGetUniqueTagId(templateCard) {
+            let result = null;
+            if (templateCard) {
+                result = templateCard.find(".hiddenPocket").attr("id");
+            }
+            // console.log("grabbing unique tag id", result);
+            return result;
+        }
+
+        function acCardUniqueTagReader(jQryObj) {                   //  XXX
+
+            let foundTag = jQryObj.find(".hiddenPocket").text();
+            let tagObj = null;
+
+            if (foundTag) {
+                tagObj = uniqueTagSplitter(foundTag);
+            }
+            return tagObj;
+        }
+
+        function acCardConstructTitle(aircraftObj) {
+            // console.log("... acCardConstructTitle firing ...");
+
+            const name = aircraftObj.name;
+            const designation = aircraftObj.designation;
+            let nickname = aircraftObj.nickname;
+
+            if (nickname && nickname.length > 0) {
+                nickname = `"${nickname}"`;
+            } else {
+                nickname = "";
+            }
+
+            const newTitleStr = `${designation} ${name} ${nickname}`;
+            return newTitleStr;
+        }
+
+        function acCardManuf(aircraftObj) {
+            // console.log("... acCardManuf firing ...");
+
+            let manuf = aircraftObj.manufacturer;
+            if (!manuf) {
+                manuf = "Manufacturer: data not present"
+            }
+            return manuf;
+        }
+
+        function acCardOperationalDateInsert(aircraftObj) {
+            // console.log("... acCardDateInsert firing ...");
+
+            const start = parseInt(aircraftObj.startYear);
+            let end = parseInt(aircraftObj.endYear);
+            let outputDate = "";
+
+            if (end === 9999) {
+                end = "Current";
+            }
+
+            if (start === 0) {
+                outputDate = "Never in production"
+            } else {
+                outputDate = start + " - " + end;
+            }
+            return outputDate;
+        }
+
+        function acCardDateCreated(aircraftObj) {
+            // console.log("... acCardDateCreated firing ...");
+
+            let dateAdded = new Date(aircraftObj.dateAdded);
+
+            let addedTime = dateAdded.toLocaleTimeString();
+            let addedDate = dateAdded.toLocaleDateString();
+
+            let addedStr = `Record created: ${addedDate} ${addedTime}`;
+            return addedStr;
+        }
+
+        function acCardDateMod(aircraftObj) {      // XXX
+            // console.log("... acCardDateMod firing ...");
+
+            let dateMod = new Date(aircraftObj.dateModified);
+            // console.log("DATE MOD:", dateMod);
+            let now = new Date();
+
+            let timeBetween = now - dateMod;
+            let timeElapsed = Math.round(timeBetween / 60000);
+            let units = "min";
+
+            if (timeElapsed > 110) {
+                timeElapsed = Math.round(timeElapsed / 60);
+                units = "hour"
+            }
+
+            if (timeElapsed > 23) {
+                timeElapsed = Math.round(timeElapsed / 24);
+                units = "day"
+            }
+
+            if (timeElapsed > 6) {
+                timeElapsed = Math.round(timeElapsed / 7);
+                units = "week"
+            }
+
+            if (timeElapsed > 4) {
+                timeElapsed = Math.round(timeElapsed * 7 / 30);
+                units = "month"
+            }
+
+            if (timeElapsed > 11) {
+                timeElapsed = Math.round(timeElapsed * 30 / 365.25);
+                units = "year"
+            }
+
+            if (timeElapsed > 1) {
+                units = units + "s";
+            }
+
+            let minutesDesc = `Last updated ${timeElapsed} ${units} ago`;
+            // console.log(timeElapsed);
+            return minutesDesc;
+        }
+
+        function acCardEngineType(aircraftObj) {      // XXX
+            // console.log("... acCardEngineType firing ...");
+
+            let engineCount = 0;
+            if (aircraftObj.engineCount) {
+                engineCount = aircraftObj.engineCount;
+            }
+
+            let engineDescription = "";
+            let tempEngDetails = aircraftObj.engineType;
+            if (tempEngDetails) {
+                engineDetails =
+                    getEngineDataByShortName(tempEngDetails, engineTypes);
+
+                // console.log("Engine Details? "
+                //     + tempEngDetails
+                //     + " ... Where type is: "
+                //     + engineDetails.shortName
+                //     + " ... Long Desc is: "
+                //     + engineDetails.longName
+                //     + engineDetails.index);
+
+                if (!(engineDetails.index === 0)) {
+                    engineDescription =
+                        ` - Type: ${engineDetails.longName}`;
+                }
+            }
+
+            const engFullDescText =
+                `Engines: ${engineCount} ${engineDescription}`;
+            return engFullDescText;
+        }
+
+        function acDesigVariants(aircraftObj) {      // XXX
+            // console.log("... acDesigVariants firing ...");
+            const listOfDesignations = aircraftObj.alternateDesignations;
+
+            let designtnStr = "No alternate designations recorded";
+
+            if (listOfDesignations
+                && Array.isArray(listOfDesignations)
+                && listOfDesignations.length > 0) {
+
+                const listLength = listOfDesignations.length;
+
+                designtnStr = "Aircraft variants by designation: ";
+                for (let index = 0; index < listLength; index++) {
+                    const currentDesig = listOfDesignations[index];
+
+                    designtnStr = designtnStr + currentDesig
+
+                    if (index < listLength - 1) {
+                        designtnStr = designtnStr + ", ";
+                    }
+                }
+            }
+
+            // console.log(designtnStr);
+            return designtnStr;
+        }
+
+        function acInfoURL(aircraftObj) {
+            // console.log("... acInfoURL firing ...");
+            const url = aircraftObj.sourceInfoUrl;
+            let urlWrapper = `<p class="text-white">Source: Link not provided</p>`;
+            if (url) {
+                urlWrapper =
+                    `<p><a href="${url}" target="_blank" class="text-white bg-dark">More Info</a></p>`;
+            }
+
+            return urlWrapper;
+        }
+
+        function acPhoto(aircraftObj, aircraftCard, title) {
+
+            // console.log("... acInfoURL firing ...");
+
+            let photoPath = aircraftObj.photoUrl;
+            const photoElement = aircraftCard.find("img");
+
+            if (photoPath) {
+
+            }
+            else {
+                photoPath = "300px-notonfile.png"
+            }
+
+            photoElement.attr("src", photoPath);
+            photoElement.attr("alt", title);
+
+            // console.log(photoPath, title);
+        }
+
+        function acNarrative(aircraftObj) {      // XXX
+            // console.log("... acNarrative firing ...");
+
+            let narrative = aircraftObj.narrative;
+            let result = "";
+
+            if (narrative && narrative.length > 0) {
+                result = `Aircraft history: ${narrative}`
+            }
+            return result;
+        }
+
+        // ------------ CARD READING CACHING ----------------------------
+
+        // ======================== ENTITIES INTERFACE ========
+        // ------------ ADD ENTITY ----------------------------
+
+        let changeList = [];     // does it even need to go on the list?  If it's sucessful
+        // the object could initiate the follow-on action.  Maintain for testing, then remove.
+
+        function CueableItem(name, payload, card) {
+            this.name = name;
+            this.id = "";
+            this.payload = payload;
+            this.card = card;
+
+            this.add = function () {
+                entityService
+                    .add(this.name, this.payload)
+                    .then(onAddSuccess)
+                    .catch(onAddError);
+            };
+
+            var onAddSuccess = data => {
+                console.log("onAddSuccess", data);
+                // console.log("this", this);
+                this.id = data.item;
+                this.payload.id = this.id;
+                afterAddAircraft(self);
+            }
+
+            var onAddError = err => {
+                console.log("onAddError", err.responseText);
+                console.log(err);
+            }
+        }
+
+
+        function cueAddEntity(name, payload) {
+
+            let addableEntity = new CueableItem(name, payload);
+
+            changeList.push(addableEntity);
+
+            addableEntity.add();
+        }
+
+
+        // function addAircraft(aircraftObj, list) {
+        //     aircraftObj.add(list);
+        // }
+
+        function afterAddAircraft(objectFromTheCue) {
+            // Do I add a card or not?
+            if (captureChanges) {
+                // Display card
+
+
+            } else {
+                // Do nothing, object is now on the api server
+                // -OR-
+                // Decue
+            }
+
+
+        }
+
+        // function addEntityV2(name, payload) {
+        //     console.log("... V2 addEntityV2 firing ...");
+
+        //     entityService.add(name, payload)
+        //         .then(onAddSuccess)
+        //         .catch(onAddError);
+        // }
+
+
+        // ----------
+        function addEntity(name, payload) {
+            console.log("... addEntity firing ...");
+
+            entityService.addEntity(name, payload)
+                .then(onAddEntitySuccess)
+                .catch(onAddEntityError);
+        }
+
+        function onAddEntitySuccess(complexResponse) {
+            console.log("... onAddEntitySuccess firing ...", complexResponse.data.data);
+
+            const entityId = complexResponse.data.data.item;
+            const entityName = complexResponse.entityName;
+            const payload = complexResponse.payload;
+            checkToAddToDisplay(entityId, entityName, payload);
+        }
+        function onAddEntityError(response) {
+            console.error(response);
+            if (captureChanges) {   // Has display buttton been pushed?
+                displayButtonToggle();
+            }
+        }
+
+        function checkToAddToDisplay(entityId, entityName, payload) {
+            if (captureChanges) {   // Has display buttton been pushed?
+                addCardToDisplay(entityId, entityName, payload);
+            }
+        }
+
+        function addCardToDisplay(entityId, entityName, payload) {
+            payload.id = entityId;
+
+            console.log("  READY TO ADD CARD TO DISPLAY ", payload);
+            const newCard = mapSingleAircraft(payload);
+            $(".clone-container").prepend(newCard);
+            displayButtonToggle();
+            addCardtoDisplayList(payload);
+        }
+
+        function addCardtoDisplayList(payload) {
+            currentDisplayList.unshift(payload);
+        }
+
+        // ------------ GET SPECIFIC ENTITY ----------------------------
+
+        function getEntityForForm(name, id) {
+            console.log("... getEntityForForm firing ...");
+
+            entityService.getSpecificRecord(name, id)
+                .then(onGetRecordSuccess)
+                .fail(onGetRecordError);
+        }
+
+        var onGetRecordSuccess = (complexResponse) => {
+            console.log("... onGetRecordSuccess firing ...", complexResponse);
+
+            writeFormData(complexResponse.entityName
+                , complexResponse.data.data.item);
+        }
+        var onGetRecordError = (response) => {
+            console.error("onGetRecordError", response);
+        }
+
+        // ------------ UPDATE / REPLACE ENTIRE CONTENTS OF ENTITY ----------------------------
+
+        function updateAircraft(name, id, payload) {
+            // changeList.push(itemToUpdate); // temp monitoring of promise process
+
+            entityService
+                .update(name, id, payload, testFailList)
+                .then(onUpdateSuccess)
+                .fail(onUpdateError);
+        }
+
+        var onUpdateSuccess = data => {
+
+            // console.log("onUpdateSuccess", data);
+            afterUpdateTasks(data.id, data.entityName, data.payload);
+        };
+
+        var onUpdateError = err => {
+
+            console.log("onUpdateError", err);
+            manageUpdateFail();
+        };
+
+        function manageUpdateFail() {
+            let failedUpdateData = testFailList.shift();
+            console.log(failedUpdateData);
+
+            // confirm from the user to reload data into the form if deleted
+            const formNameValue = $("#nameInput").val();
+            const isFormClear = (!(failedUpdateData.payload.name === formNameValue));
+
+            if (isFormClear) {
+                const reloadFormMessage = "Form update failed on network transaction." +
+                    `\nForm has been cleared since update attempted.` +
+                    `\nWould you like to reload failed form?`
+                if (confirm(reloadFormMessage)) {
+
+                    let aircraftCard = findCard(failedUpdateData.entityName
+                        , failedUpdateData.entityId)
+                    formWritingInitiator(aircraftCard)
+
+                } else {
+
+                    // do nothing, drop the issue
+                    console.log("manageUpdateFail :: user rejecting form reload")
+                }
+            }
+        }
+
+        function afterUpdateTasks(entityId, entityName, payload) {
+
+            let cardToUpdate = findCard(entityId, entityName);
+
+            payload.id = entityId;
+
+            mapSingleAircraft(payload, 0, [], cardToUpdate);
+
+            // cardToUpdate = 
+
+            clearForm();
+
+            console.log(" UPDATING DISPLAY ", entityId, entityName, payload);
+            displayButtonToggle();
+        }
+
+        function findCard(entityId, entityName) {
+
+            let findThis = uniqueTagCombinator(entityName, entityId);
+            let markedElement = $("#displaySection").find("#" + findThis);
+            let jQobj = $(markedElement).closest(".aircraftCard");
+            console.log("Find card:", jQobj);
+            return jQobj;
+        }
+
+        // ------------ ADD TO OR UPDATE PROPERTIES OF ENTITY ----------------------------
+
+        // function addToOrUpdate(name, id, payload) { //  NOT CONNECTED
+        //     console.log("... addToOrUpdate firing ...");
+
+        //     entityService.addToOrUpdateProps(name, id, payload)
+        //         .then(onAddToOrUpdatePropsSuccess)
+        //         .catch(onAddToOrUpdatePropsError);
+        // }
+
+        // function onAddToOrUpdatePropsSuccess(response) {
+        //     console.log("... onAddToOrUpdatePropsSuccess firing ...", response);
+        // }
+        // function onAddToOrUpdatePropsError(response) {
+        //     console.error(response);
+        // }
+
+        // ------------ DELETE ENTITY ----------------------------
+
+        let testFailList = [];  // TEMP delete fail bucket
+
+        function testDeleteFail() { // XXX TEST FUNCTION
+
+            // try {
+
+            // entityService
+            //     .delete("aircraft", 2929292929, testFailList)
+            //     .then(onDeleteSuccess)
+            //     .fail(onDeleteError)
+
+            // .catch(onDeleteError);
+            // .always(afterAttemptDeleteAircraft);
+            // }
+            // catch (err) {       // another nope ... passed out of scope
+            //     console.log(" TRY CATCH ");
+            //     console.log(err);
+            // }
+            // entityService.deleteVaxios("aircraft", 2929292929)
+            //     .then(onDeleteSuccess)
+            //     .catch(onDeleteError);
+
+            entityService.deleteVwrapped("aircraft", 2929292929)
+                .then(onDeleteSuccess)
+                .catch(onDeleteError);
+
+        }
+
+        function initiateDeletion(tagObj, jQobj) {
+
+            setCardButtonsToDisabled(jQobj);
+
+            // entityService
+            //     .delete(tagObj.entityName, tagObj.entityId, testFailList)
+            //     .then(onDeleteSuccess)  // .done(onDeleteSuccess)
+            //     .fail(onDeleteError)
+            // .always(afterAttemptDeleteAircraft);
+            // entityService.deleteVaxios(tagObj.entityName, tagObj.entityId)
+            //     .then(onDeleteSuccess)
+            //     .catch(onDeleteError);
+
+            entityService.deleteVwrapped(tagObj.entityName, tagObj.entityId)
+                .then(onDeleteSuccess)
+                .catch(onDeleteError);
+
+        }
+
+        var onDeleteSuccess = data => {
+            console.log("onDeleteSuccess", data);
+            removeCard(data.entityName, data.entityId);
+            // afterAttemptDeleteAircraft(data); // clean-up items handled here
+        }
+
+        var onDeleteError = (err1, err2, err3) => {
+            console.log("onDeleteError");
+            console.log(err1, err2, err3);
+            if (err1 && (err1.isSuccessful === false)) {
+                manageDeleteError(err1);
+            } else {
+                manageDeleteError(testFailList.shift());
+            }
+        }
+
+        // var afterAttemptDeleteAircraft = (data) => {
+        //     console.log("afterDeleteAircraft", data);
+
+        //     if (data && data.isSuccessful) {
+
+        //         // if (data.card) {
+        //         //     console.log("Removing card from DOM directly");
+        //         //     card.remove();
+
+        //         // } else {
+        //         // removeCard(data.entityName, data.entityId);
+        //         // }
+
+        //     } else {
+        //         manageDeleteError(data);
+        //     }
+
+        // }
+
+        function setCardButtonsToDisabled(jQobj, isDisabled = true) {
+            jQobj.find(".cardDeleteButton").prop("disabled", isDisabled);
+            jQobj.find(".cardEditButton").prop("disabled", isDisabled);
+        }
+
+        function removeCard(entityName, entityId) {
+            console.log("... removeCard firing ...", entityName, entityId);
+
+            cardSearchResult = findCard(entityId, entityName);
+            console.log(cardSearchResult);
+            if (cardSearchResult) {
+
+                let cardToRemove = cardSearchResult.closest(".aircraftCard");
+                cardToRemove.remove();
+
+            } else {
+                console.log("Card not found.", entityName, entityId, cardSearchResult);
+            }
+        }
+
+        function manageDeleteError(error) {
+            let entityId = null;
+            let entityName = null;
+
+            if (error && error.entityId && error.entityName) {
+                entityId = error.entityId;
+                entityName = error.entityName;
+
+                if (entityId && entityName) {
+                    let cardWithIssues = findCard(entityId, entityName);
+
+                    let alertMessage = `${error.compositeError}`
+                        + `\n Attemping to delete  '${entityId}'  in  '${entityName}'`
+                        + ` failed.  \n`;
+
+                    alert(alertMessage);
+
+                    cardWithIssues.addClass("bg-secondary");
+                    cardWithIssues.removeClass("bg-danger");
+
+                    // setCardButtonsToDisabled(cardWithIssues, false);
+                }
+
+            } else {
+                console.log("manageDeleteError, unable to process error", error);
+            }
+
+
+
+
+        }
+
+        // ------------ DELETE ALL ENTITIES IN NAME(category) ----------------------------
+
+
+        // ---------- ONE - BY - ONE IN SEQUENCE THROUGH ALL
+
+        // ==================================================================
+
+    </script>
+    <!-- 🛑 Do Not Write Any Code Below here -->
+</body>
+
+</html>

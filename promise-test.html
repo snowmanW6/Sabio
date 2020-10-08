@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- #region Sabio Code - You can Fold this region to remove it from sight -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Sabio Coding Bootcamp" />
+    <meta itemprop="image" content="https://sabio.la/Sabio.png">
+    <link rel="shortcut icon" href="https://sabio.la/Sabio.png">
+    <link rel="icon" type="image/png" href="https://sabio.la/Sabio.png" />
+    <!-- Do Not Change the HTML title or anything between this line and the line with the 💘's -->
+    <title>Promise Testing Ground</title>
+    <link href="https://pw.sabio.la/dist/all-site.css" rel="stylesheet" />
+    <script src="https://pw.sabio.la/api/js/site"></script>
+    <script src="https://unpkg.com/axios@0.19.2/dist/axios.min.js"></script>
+
+    <!-- #endregion -->
+    <!-- I 💘 Code, You 💘 Code, We all 💘 Code -->
+
+    <!-- 💡 All your CSS in here -->
+    <style>
+
+    </style>
+</head>
+
+<body class="sabio" data-ins="pw-00">
+    <!-- Do Not Edit or Remove this nav element -->
+    <nav class="do-not-remove navbar navbar-expand-md navbar-dark bg-dark sabio"></nav>
+
+    <div class="container ajax sabio d-none"></div>
+
+    <!-- Do Not Edit or Remove this footer element -->
+    <footer class="do-not-remove container-fluid footer mx-auto  fb-targert sabio">
+        <p class="text-center">© Sabio.la 2019</p>
+    </footer>
+
+    <!--👇🏻 All your JavaScript code goes below here inside this script tag 👇🏻 -->
+    <script id="candidateCode">
+
+        // ADAPTED FROM:
+
+        // http://tutorials.jenkov.com/jquery/deferred-objects.html
+
+        // and:
+
+        // https://javascript.info/promise-error-handling
+
+        // ---------------------------------------------------- 1 CALLBACK ---------
+
+        function doAsync(callback) {
+            setTimeout(
+                function () {
+                    callback();
+                }
+                , 750
+            );
+        }
+
+        doAsync(function () {
+            console.log("Executed after a delay");
+        });
+
+        var speak = function () {
+            console.log("Speak: Executed after a delay");
+        }
+
+        doAsync(speak);
+
+        function doAsyncV02(message, delay, callback) {
+            setTimeout(
+                function () {
+                    callback(message);
+                }
+                , delay
+            );
+        }
+
+        var speak2 = function (message) {
+            console.log("Speak2: ", message);
+        }
+
+        doAsyncV02("Successful, moving on", 1000, speak2);
+
+        // ----------------------------------------------------- 2 JQUERY DEFERRED OBJECT --------
+
+        function doAsync2() {
+            var deferedObject = $.Deferred();
+
+            setTimeout(function () { deferedObject.resolve(); }, 1500);
+
+            return deferedObject.promise();
+        }
+
+        var promise2 = doAsync2();
+
+        promise2.done(function () {
+            console.log("doAsynch2:  Executed after a delay");
+        });
+
+        promise2.fail(function () {
+            console.log("doAsynch2: Execute this if the async work FAILS");
+        });
+
+        doAsync2()
+            .done(function () {
+                console.log("doAsynch2 v01: Executed after a delay");
+            }).fail(function () {
+                console.log("doAsynch2 v01: Executed if the asynch work FAILS");
+            });
+
+        // ----------------------------------------------------- 3 --------
+
+        function doAsync3() {
+            var deferedObject = $.Deferred();
+
+            setTimeout(function () {
+                var randomValue = Math.random();
+                if (randomValue < 0.5) {
+                    deferedObject.resolve();
+                } else {
+                    deferedObject.reject();
+                }
+            }, 2000);
+
+            return deferedObject.promise();
+            // Does NOT allow the user of the function to modify the state of the deferred object
+        }
+
+        doAsync3()
+            .done(function () {
+                console.log("doAsynch3: Executed after a delay");
+            }).fail(function () {
+                console.log("doAsynch3: Executed if the asynch work FAILS");
+            });
+
+        var promise3 = doAsync3();
+
+        promise3.done(function () { console.log("done 1"); });  // you can have multiple dones, fails, always...
+        promise3.done(function () { console.log("done 2"); });
+
+        promise3.fail(function () { console.log("fail 1"); });
+        promise3.fail(function () { console.log("fail 2"); });
+
+        promise3.always(function () { console.log("always 1"); });
+        promise3.always(function () { console.log("always 2"); });
+
+        // ----------------------------------------------------- 4 --------
+
+        function doAsync4() {
+            var deferedObject = $.Deferred();
+
+            setTimeout(function () {
+                var randomValue = Math.random();
+                if (randomValue < 0.5) {
+                    // deferedObject.resolve();
+                    deferedObject.resolve(randomValue, "val2");
+                } else {
+                    // deferedObject.reject();
+                    deferedObject.reject(randomValue, "errorCode");
+                }
+            }, 2500);
+
+            return deferedObject;
+            // Allows the user of the function to modify the state of the deferred object
+        }
+
+        doAsync4()
+            .done(function (value, value2) {
+                console.log("doAsynch4: Executed after a delay " + value + " : " + value2);
+            }).fail(function (value, value2) {
+                console.log("doAsynch4: Executed if the asynch work FAILS " + value + " : " + value2);
+            }).always(function (value, value2) {
+                console.log("doAsynch4: ALWAYS Executed " + value + " : " + value2);
+
+            });
+
+
+        // ----------------------------------------------------- 5 PROGRESS NOTIFICATION --------
+
+        function doAsynch5() {
+            var deferredObject = $.Deferred();
+
+            setTimeout(function () { deferredObject.notify(1); }, 3000);
+            setTimeout(function () { deferredObject.notify(2); }, 4000);
+            setTimeout(function () { deferredObject.notify(3); }, 5000);
+            setTimeout(function () { deferredObject.resolve(4); }, 6000);
+
+            return deferredObject.promise();
+        }
+
+        doAsynch5().progress(function (progressValue) {
+            console.log("doAsynch5 progress: " + progressValue);
+        }).done(function () {
+            console.log("doAsynch5 succeeded. ");
+        });
+
+        doAsynch5()
+            .then(function (val) { console.log("B: done -1") },
+                function (val) { console.log("B: fail -1") },
+                function (val) { console.log("B: prog -1") }
+            )
+            .then(function (val) { console.log("B: done -2") },
+                function (val) { console.log("B: fail -2") },
+                function (val) { console.log("B: prog -2") }
+            );
+
+        doAsynch5()
+            .done(function (val) { console.log("C: done -1") })
+            .fail(function (val) { console.log("C: fail -1") })
+            .progress(function (val) { console.log("C: progress -1") })
+
+            .done(function (val) { console.log("C: done -2") })
+            .fail(function (val) { console.log("C: fail -2") })
+            .progress(function (val) { console.log("C: progress -2") });
+
+        doAsynch5()
+            .then(function (val) { console.log("D: done -1: " + val); return val + 1; },
+                function (val) { console.log("D: fail -1: " + val) },
+                function (val) { console.log("D: prog -1: " + val); return val + 1; }
+            )
+            .then(function (val) { console.log("D: done -2: " + val) },
+                function (val) { console.log("D: fail -2: " + val) },
+                function (val) { console.log("D: prog -2: " + val) }
+            );
+
+        // ----------------------------------------------------- 6 WHEN : WAITING ON MULTIPLE --------
+
+        $.when(doAsync4(), doAsync4())
+            .done(function (val1, val2) {
+                console.log("when val1: " + val1);
+                console.log("when val2: " + val2);
+            })
+            .fail(function (val1, val2) {
+                console.log("when fail: " + val1 + " : " + val2); //+ " : " + val3);
+            })
+
+        $.when(doAsync4(), doAsync4())
+            .done(function (val1, val2) {
+                for (var i = 0; i < val1.length; i++) {
+                    console.log("when array val1[" + i + "]: " + val1[i]);
+                }
+                for (var i = 0; i < val2.length; i++) {
+                    console.log("when array val2[" + i + "]: " + val2[i]);
+                }
+            })
+            .fail(function (val1, val2) {
+                console.log("when fail, only get first failed params: "
+                    + val1 + " : " + val2); // + " : " + val3);
+            })
+            ;
+
+        // -------------------------------- jQuery animation example
+        $("#theButton").on("click", function () {
+
+            $("div").each(function (i) {
+                $(this).fadeIn().fadeOut(1000 * (i + 1));
+            });
+
+            $("div").promise().done(function () {
+                $("p").append(" Finished! ");
+            });
+        });
+
+        // ------------------------ BUT WHY?
+        // new Promise(function (resolve, reject) {
+        //     setTimeout(() => {
+        //         throw new Error("B:99 Whoops!");
+        //     }, 10000);
+        // }).catch(alert);
+        // --- the throw is actually occurring outside the promise...
+
+        // -------------------- no such website trigger
+        // fetch('http://no-such-server.blablablabla')
+        //     .then(response => response.json())
+        //     .catch(err => alert(err));
+
+        // -------------------- multiple... 
+        // fetch('/article/promise-chaining/user.json')
+        //     .then(response => response.json())
+        //     .then(user => fetch(`https://api.github.com/users/${user.name}`))
+        //     .then(response => response.json())
+        //     .then(githubUser => new Promise((resolve, reject) => {
+        //         let img = document.createElement('img');
+        //         img.src = githubUser.avatar_url;
+        //         img.className = "promise-avatar-example";
+        //         document.body.append(img);
+
+        //         setTimeout(() => {
+        //             img.remove();
+        //             resolve(githubUser);
+
+        //         }, 3000);
+        //     }))
+        // .catch(error => alert(error.message));
+
+
+        // -------------------- exception trigger
+        // new Promise((resolve, reject) => {
+        //     throw new Error("B:2 Whoops!");
+        // }).catch(alert); // Error: Whoops!
+
+
+        // -------------------- reject trigger
+        // new Promise((resolve, reject) => {
+        //     reject(new Error("B:3 Whoops!"));
+        // }).catch(alert); // Error: Whoops!
+
+
+        // -------------------- exception thrown in subsequent then chain trigger
+        // new Promise((resolve, reject) => {
+        //     resolve("ok");
+        // }).then((result) => {
+        //     throw new Error("B:4 Whoops!"); // rejects the promise
+        // }).catch(alert); // Error: Whoops!
+
+
+        // -------------------- no such function trigger
+        // new Promise((resolve, reject) => {
+        //     resolve("ok");
+        // }).then((result) => {
+        //     blabla(); // no such function
+        // }).catch(alert); // ReferenceError: blabla is not defined
+
+
+        // -------------------- RETHROWING :: the execution: catch -> then
+        // new Promise((resolve, reject) => {
+
+        //     throw new Error("Whoops!");
+        // })
+        //     .then(() => alert("First successful handler runs"))
+
+        //     .catch(function (error) {
+        //         alert("The error is handled, continue normally");
+        //     })
+        //     .then(() => alert("Next successful handler runs"));
+
+
+        // -------------------- the execution: catch -> catch ------------------
+        new Promise((resolve, reject) => {
+
+            throw new Error("Whoops!");
+
+        }).catch(function (error) { // (*)
+
+            if (error instanceof URIError) {
+                // handle it
+            } else {
+                alert("Can't handle such error");
+
+                throw error; // throwing this or another error jumps to the next catch
+            }
+
+        }).then(function () {
+            /* doesn't run here */
+        }).catch(error => { // (**)
+
+            alert(`The unknown error has occurred: ${error}`);
+            // don't return anything => execution goes the normal way
+        });
+
+
+        // -------------------- unhandled rejections - trigger global error
+        // new Promise(function () {
+        //     noSuchFunction(); // Error here (no such function)
+        // })
+        //     .then(() => {
+        //         // successful promise handlers, one or more
+        //     }); // without .catch at the end!
+
+
+        // -------------------- another way to look at unhandled rejections
+        window.addEventListener('unhandledrejection', function (event) {
+            // the event object has two special properties:
+            alert(event.promise); // [object Promise] - the promise that generated the error
+            alert(event.reason); // Error: Whoops! - the unhandled error object
+        });
+
+        new Promise(function () {
+            throw new Error("Whoops!");
+        }); // no catch to handle the error
+
+
+        // -------------------- 
+
+
+        // -------------------- 
+
+
+
+        // -------------------- 
+
+
+        // -------------------- 
+
+    </script>
+    <!-- 🛑 Do Not Write Any Code Below here -->
+</body>
+
+</html>

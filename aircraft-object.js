@@ -13,6 +13,7 @@ function Aircraft(name = ""
     , narrative = ""
 ) {
     Aircraft.entityName = "aircraft";  // STATIC value; must re-assign to any child to keep
+
     this.name = name;
     this.designation = designation;
     this.manufacturer = manuf;
@@ -26,10 +27,37 @@ function Aircraft(name = ""
     this.photoUrl = photoUrl;
     this.sourceInfoUrl = sourceInfoUrl;
     this.narrative = narrative;
+
     this.id = 0;
+    this.card = {};
+    // this.objContainer = [];
+
     this.entityName = function () {
         return Aircraft.entityName;
     }
+
+    // this.add = function (list) {
+
+    //     this.objContainer = list;
+
+    //     entityService
+    //         .add(this.name, this.payload)
+    //         .then(onAddSuccess)
+    //         .catch(onAddError);
+    // };
+
+    // var onAddSuccess = data => {
+    //     console.log("onAddSuccess", data);
+    //     // console.log("this", this);
+    //     this.id = data.item;
+
+    //     this.objContainer.push(self);
+    // }
+
+    // var onAddError = err => {
+    //     console.log("onAddError", err.responseText);
+    //     console.log(err);
+    // }
 }
 // Aircraft.getEntityName = function getEntityName() {
 //     return this.entityName;
@@ -83,19 +111,25 @@ function getEngineDataByShortName(shortNameToFind, engineTypeList = engineTypes)
     }
     // console.log("Engine List index: ", index);
     const engineData = getEngineDataByIndex(index, engineTypeList);
+
+    // let tempLongName = engineData.longName;
+    if (engineData.index === engineTypeList.length - 1) {
+        engineData.longName = shortNameToFind;
+    }
     return engineData;
 }
 
 function getEngineDataByIndex(index, engineTypeList = engineTypes) {
     // console.log("... getEngineDataByIndex firing ...");
-
+    let lastIndex = engineTypeList.length - 1;
     if (index && index >= 0) {
-        if (index > (engineTypeList.length - 1)) {
-            index = engineTypeList.length - 1;
+        if (index > (lastIndex)) {
+            index = lastIndex;
         }
     } else {
         index = 0;
     }
+
     const engineData = {
         id: engineTypeList[index].id
         , index: index
